@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-URL = "https://cars.av.by/filter?brands[0][brand]=683"
+URL = "https://cars.av.by/filter?brands[0][brand]=1850"
 HEADERS = {
     'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0',
     'accept': '*/*',
@@ -17,13 +17,19 @@ def get_html(url, params=None):
 def get_pages_count(html):
     soup = BeautifulSoup(html, 'html.parser')
     pagination = soup.find('h3', class_='listing__title').get_text()
-    if len(pagination)==22:
-        a= pagination[8:11]
+    if len(pagination)==24:
+        c = pagination [8:9]
+        b = pagination[10:13]
+        a= c + b
     elif len(pagination)==23:
-        a = pagination[8:12]
-    page= int(a)//25
+        page=pagination[8:12]
+    elif len(pagination)== 22:
+        page = pagination[8:11]
+    elif len(pagination)== 21:
+        page= pagination[8:10]
+    page = (int(page)//25) +1
     return page
-
+   ## ТУТА
 
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
