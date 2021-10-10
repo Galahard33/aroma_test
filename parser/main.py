@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -13,6 +14,7 @@ FILE = 'cars.csv'
 def get_html(url, params=None):
     r = requests.get(url, headers= HEADERS, params=params)
     return r
+
 
 def get_pages_count(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -31,6 +33,7 @@ def get_pages_count(html):
     return page
    ## ТУТА
 
+
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('div', class_='listing-item')
@@ -41,7 +44,7 @@ def get_content(html):
         cars.append({
             'title': item.find('h3', class_='listing-item__title').get_text(),
             'link': HOST + item.find('a', class_='listing-item__link').get('href'),
-            'price': item.find('div', class_='listing-item__price').get_text(),
+            'price': re.sub(r"\u200b|\u2009|\u200a|\xa0", " ", item.find('div', class_='listing-item__price').get_text()),
             'location': item.find('div', class_='listing-item__location').get_text()
         })
     return (cars)
@@ -58,6 +61,8 @@ def save_file(items, path):
 
 
 def parse():
+    URL = input('Введите URL: ')
+    URL = URL.strip()
     html = get_html(URL)
     if html.status_code == 200:
         cars = []
@@ -69,6 +74,7 @@ def parse():
         save_file(cars, FILE)
     else:
         print('Error')
+
 
 parse()
 
