@@ -1,8 +1,6 @@
 
 from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-from wtforms import ValidationError
-from models import User
 
 
 class LoginForm(Form):
@@ -19,11 +17,16 @@ class LoginForm(Form):
 class RegisterForm(Form):
     login = StringField('Username',
             validators=[DataRequired(), Length(min=3, max=32)])
+    email = StringField('Email',
+                      validators=[DataRequired(), Email(), Length(min=6, max=40)])
+    phone = StringField('Номер телефона',
+            validators=[DataRequired(), Length(min=13, max=13,
+            message='Введите телефон в формате +375...')])
     password = PasswordField('Password',
             validators=[DataRequired(), Length(min=8, max=64)])
     confirm = PasswordField('Verify password',
             validators=[DataRequired(), EqualTo('password',
-            message='Passwords must match')])
+            message='Пароли должны совпадать')])
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)

@@ -13,8 +13,10 @@ db = SQLAlchemy(app)
 
 class User (db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(128), nullable=False, unique=True)
+    login = db.Column(db.String(128), nullable=False,)
     password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(250), unique=True)
+    phone = db.Column(db.String(13), unique=True)
 
 
 @manager.user_loader
