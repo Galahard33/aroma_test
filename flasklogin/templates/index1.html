@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>ost</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% from "_util.html" import render_field %}
+<form id="BlogForm" class="form form-post" method="POST" action="" role="form" enctype="multipart/form-data">
+    {{ render_field(form.title, placeholder="title") }}<br>
+    {{ render_field(form.text, placeholder="text") }}<br>
+         <input type="file" name="file1"><br>
+    <p><input class="btn btn-default btn-submit" type="submit" value="send"></p>
+</form>
+</body>
+</html>

@@ -11,7 +11,7 @@ HEADERS = {
     'user-agent' : "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0",
     "accept": "*/*"
     }
-PAGE_COUNT = 1
+PAGE_COUNT = 3
 
 def get_soup(url, **kwargs):
     r = requests.get(url, **kwargs)
@@ -22,11 +22,25 @@ def get_soup(url, **kwargs):
     return soup
 
 def crawl_produkts(page_count):
+    pagination = get_soup(URL).find('h3', class_='listing__title').text
+    if len(pagination)==24:
+        c = pagination [8:9]
+        b = pagination[10:13]
+        a= c + b
+    elif len(pagination)==23:
+        page=pagination[8:12]
+    elif len(pagination)== 22:
+        page = pagination[8:11]
+    elif len(pagination)== 21:
+        page = pagination[8:10]
+    page = (int(page)//25) +1
     urls=[]
-    fmt = 'https://cars.av.by/filter?brands[0][brand]=634&page={page}'
-    for i in range(1,PAGE_COUNT+1):
+    fmt = URL+'{page}'
+    print(fmt)
+    for i in range(1,PAGE_COUNT):
         print('page:{}'.format(i))
         page_url = fmt.format(page=i)
+        print(page_url)
         soup =get_soup(page_url).find_all("div", class_='listing-item')
 
         if soup is None:
@@ -40,13 +54,16 @@ def crawl_produkts(page_count):
 def parse_product(urls):
     cars = []
     for urli in urls:
+        print(urli)
         soup = get_soup(urli)
         title = re.sub(r'\xa0',' ',soup.find('h1', class_='card__title').text)
-        content = re.sub(r'\xa0',' ',soup.find("div", class_='card__comment-text').get_text())
+        content = "Описание отсутствует"
+        content_full = re.sub(r'\xa0',' ',soup.find("div", class_='card__comment-text'))
+        if content_full:
+            content = re.sub(r'\xa0',' ',soup.find("div", class_='card__comment-text').text)
         prise = re.sub(r"\u200b|\u2009|\u200a|\xa0", " ", soup.find('div', class_= 'card__price-primary').text)
         img = soup.find('img', class_='lazyload').get("data-src")
-        cars.append((title,prise,content,img))
-        print(cars)
+        cars.append((title, prise, content, img))
     return cars
 
 

@@ -1,5 +1,5 @@
 
-from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form
+from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form, TextField, FileField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 
@@ -30,3 +30,14 @@ class RegisterForm(Form):
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
+
+
+class BlogForm(Form):
+    title = StringField('Заголовок',
+            validators=[DataRequired(), Length(min=3, max=350)])
+    text = TextField('post',
+                      validators=[DataRequired()])
+    photo_path = StringField('путь')
+
+    def __init__(self, *args, **kwargs):
+        super(BlogForm, self).__init__(*args, **kwargs)

@@ -1,14 +1,46 @@
+import os
 from flask import render_template, redirect, url_for, request, flash
+from flask_admin.contrib.sqla import ModelView
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from models import User, load_user
-from forms import LoginForm, RegisterForm
+
+
+from models import User, load_user, Blog
+from forms import LoginForm, RegisterForm, BlogForm
 from models import app, db
+from flask_admin import Admin
 
 
-@app.route('/')
-def hello_world():
-    return  render_template('index.html')
+UPLOAD_FOLDER = './static/site/image'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+admin = Admin(app, name='blog', template_mode='bootstrap4')
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Blog, db.session))
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    post = Blog.query.all()
+    return render_template('index.html', post=post)
+
+
+@app.route('/add_post', methods=['GET', 'POST'])
+def upload_file():
+    form = BlogForm(request.form)
+    if request.method == 'POST':
+        file1 = request.files['file1']
+        path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+        file1.save(path)
+        if form.validate():
+            new_post = Blog(title=form.title.data,
+                            text=form.text.data,
+                            photo=path)
+            db.session.add(new_post)
+            db.session.commit()
+            flash('add')
+            return redirect(url_for('index'))
+    return render_template('index1.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -22,7 +54,7 @@ def login_page():
             if next_page:
                 return redirect(next_page)
             else:
-                return redirect(url_for('hello_world'))
+                return redirect(url_for('index'))
         else:
             flash('Login or password is not correct')
 
@@ -51,7 +83,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash('Вы успешно зарегистрировались')
-        return redirect(url_for('hello_world'))
+        return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
 
@@ -59,7 +91,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('hello_world'))
+    return redirect(url_for('index'))
 
 
 @app.after_request

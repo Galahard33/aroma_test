@@ -1,0 +1,17 @@
+{% load blog_tags %}
+{% get_pop_posts as pop_post %}
+<aside class="single_sidebar_widget popular_post_widget">
+    <h3 class="widget_title">Popular Posts</h3>
+    {% for item in pop_post %}
+    <div class="media post_item">
+        <img src="{{ item.photo.url }}" width="120" alt="post">
+        <div class="media-body">
+            <a href="{{ item.get_absolute_url }}">
+                <h3>{{ item.title }}</h3>
+            </a>
+            <p>{{ item.created_at }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="br"></div>
+</aside>

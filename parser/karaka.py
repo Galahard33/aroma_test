@@ -15,21 +15,25 @@ def get_html(url, params=None):
     return r
 
 
+
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('div', class_="content")
-    numbers = []
+    car=[]
 
     for item in items:
-        numbers.append({
-            'title': item.find('div', class_='title').get_text(),
-            'link': item.find('a', class_='').get('href'),
-        })
-    print(numbers)
+        car.append(
+           item.find('a', class_='').get('href'),
+        )
+    return (car)
+
+
 
 def parse():
     html = get_html(URL)
     get_content(html.text)
+    print()
+
 
 
 parse()

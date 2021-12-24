@@ -1,0 +1,282 @@
+{% load shops_tags %}
+{% load static %}
+
+
+
+
+<section class="blog-banner-area" id="category">
+  <div class="container h-100">
+    <div class="blog-banner">
+      <div class="text-center">
+        {% if category.title %}
+        <h1>{{ category.title }}</h1>
+        <nav aria-label="breadcrumb" class="banner-breadcrumb">
+
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          </ol>
+          {% else %}
+          <h1>Категории</h1>
+          <nav aria-label="breadcrumb" class="banner-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            </ol>
+            {% endif %}
+          </nav>
+      </div>
+    </div>
+</section>
+	<!-- ================ end banner area ================= -->
+
+
+<!-- ================ category section start ================= -->
+<section class="section-margin--small mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-3 col-lg-4 col-md-5">
+        <div class="sidebar-categories">
+          <div class="head">Browse Categories</div>
+          <ul class="main-categories">
+            <li class="common-filter">
+
+              <ul>
+                {% get_categories_count %}
+              </ul>
+
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-filter">
+
+
+          <div class="common-filter">{% if subcategorys %}
+            <div class="top-filter-head">Product Filters</div>
+            <div class="head">Brands</div>
+
+            {% for items in subcategorys %}
+            <ul>
+              <li class="filter-list"><a href="{{ items.get_absolute_url }}">{{ items.title }}
+                <span>({{ items.cnt }})</span></a></li>
+            </ul>
+            {% endfor %}
+
+            {% endif %}
+
+            </div>
+
+          </div>
+        </div>
+        <div class="col-xl-9 col-lg-8 col-md-7">
+          <!-- Start Filter Bar -->
+          <div class="filter-bar d-flex flex-wrap align-items-center">
+            <div>
+              <div class="input-group filter-bar-search">
+                 <form class="form-inline my-2 my-lg-0" action="{% url 'shop_category' %}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                <div class="input-group-append">
+                  <button type="button"><i class="ti-search"></i></button>
+                 </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Filter Bar -->
+          <!-- Start Best Seller -->
+          <section class="lattest-product-area pb-40 category-list">
+            <div class="row">
+              {% for item in page_obj %}
+              <div class="col-md-6 col-lg-4">
+                <div class="card text-center card-product">
+                  <div class="card-product__img">
+                    <img class="card-img" src="{{ item.photo.url }}" alt="">
+                    <ul class="card-product__imgOverlay">
+                      <li><button><i class="ti-search"></i></button></li>
+                      <li><button><i class="ti-shopping-cart"></i></button></li>
+                      <li><button><i class="ti-heart"></i></button></li>
+                    </ul>
+                  </div>
+                  <div class="card-body">
+                    <p>{{ item.category }}</p>
+
+                    <h4 class="card-product__title"><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></h4>
+                    <p class="card-product__price">${{ item.price }}</p>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+
+          </section>
+          <div class="row">
+      <div class="col-6"></div>
+      <div class="col-4"><nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item ">
+      {% if page_obj.has_previous %}
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+      {% endif %}
+    </li>
+    {% for p in page_obj.paginator.page_range %}
+    {% if page_obj.number == p %}
+      <li class="page-item active">
+      <a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only">(current)</span></a>
+    </li>
+    {% else %}
+     <li class="page-item">
+      <a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only">(current)</span></a>
+    </li>
+    {% endif %}
+    {% endfor %}
+    <li class="page-item">
+       {% if page_obj.has_next %}
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+    </li>
+  </ul>
+        {% endif %}
+</nav></div>
+          <!-- End Best Seller -->
+        </div>
+      </div>
+    </div>
+  </section>
+	<!-- ================ category section end ================= -->
+
+	<!-- ================ top product area start ================= -->
+	<section class="related-product-area">
+		<div class="container">
+			<div class="section-intro pb-60px">
+        <p>Popular Item in the market</p>
+        <h2>Top <span class="section-intro__style">Product</span></h2>
+      </div>
+			<div class="row mt-30">
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-1.png' %}" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-2.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-3.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-4.png' %}" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-5.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-6.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-7.png' %}" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-8.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-9.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+          <div class="single-search-product-wrapper">
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-1.png' %}" alt=""></a>
+              <div class="desc">
+                  <a href="#" class="title">Gray Coffee Cup</a>
+                  <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-2.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+            <div class="single-search-product d-flex">
+              <a href="#"><img src="{% static 'img/product/product-sm-3.png' %}" alt=""></a>
+              <div class="desc">
+                <a href="#" class="title">Gray Coffee Cup</a>
+                <div class="price">$170.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+		</div>
+	</section>
+	<!-- ================ top product area end ================= -->
+
+	<!-- ================ Subscribe section start ================= -->
+  <section class="subscribe-position">
+    <div class="container">
+      <div class="subscribe text-center">
+        <h3 class="subscribe__title">Get Update From Anywhere</h3>
+        <p>Bearing Void gathering light light his eavening unto dont afraid</p>
+        <div id="mc_embed_signup">
+          <form target="_blank" action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01" method="get" class="subscribe-form form-inline mt-5 pt-1">
+            <div class="form-group ml-sm-auto">
+              <input class="form-control mb-1" type="email" name="EMAIL" placeholder="Enter your email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email Address '" >
+              <div class="info"></div>
+            </div>
+            <button class="button button-subscribe mr-auto mb-1" type="submit">Subscribe Now</button>
+            <div style="position: absolute; left: -5000px;">
+              <input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
