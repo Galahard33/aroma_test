@@ -1,3 +1,4 @@
+{% if current_user.is_authenticated %}
 {%  extends '_inc/base.html' %}
 {% block content %}
 <body>
@@ -13,12 +14,14 @@
 {% endwith %}
 {% from "_util.html" import render_field %}
 <form id="BlogForm" class="form form-post" method="POST" action="" role="form" enctype="multipart/form-data">
-    {{ render_field(form.title, placeholder="title") }}<br>
+    {{ render_field(form.title, placeholder="title", value =post.title) }}<br>
     {{ render_field(form.text, placeholder="text") }}<br>
          <input type="file" class="btn-danger" name="file1"><br>
     <p><input class="btn btn-outline-primary" type="submit" value="send"></p>
 </form>
+
 {{ ckeditor.load() }}
  {{ ckeditor.config(name='text') }}
 </body>
 {% endblock %}
+{% endif %}

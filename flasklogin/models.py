@@ -29,3 +29,5 @@ class Blog(db.Model):
     title = db.Column(db.String(200), nullable=False)
     text = db.Column(db.Text)
     photo = db.Column(db.String(250))
+
+

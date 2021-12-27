@@ -1,3 +1,5 @@
+{%  extends '_inc/base.html' %}
+{% block content %}
 <h1>LOGIN</h1>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -12,8 +14,6 @@
 <form id="loginForm" class="form form-register" method="POST" action="" role="form">
     {{ render_field(form.login, placeholder="login") }}<br>
     {{ render_field(form.password, placeholder="password") }}<br>
-    <p><input class="btn btn-default btn-submit" type="submit" value="Login"></p>
+    <p><input class="btn btn-danger" type="submit" value="Login"></p>
 </form>
-
-<a href="/">index</a><br>
-<a href="/register">register</a><br>
+{% endblock %}

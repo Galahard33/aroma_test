@@ -1,6 +1,8 @@
 
-from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form, TextField, FileField
+from flask_ckeditor import CKEditorField
+from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form, TextField, FileField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms.widgets import TextArea
 
 
 class LoginForm(Form):
@@ -35,9 +37,11 @@ class RegisterForm(Form):
 class BlogForm(Form):
     title = StringField('Заголовок',
             validators=[DataRequired(), Length(min=3, max=350)])
-    text = TextField('post',
+    text = CKEditorField('post',
                       validators=[DataRequired()])
     photo_path = StringField('путь')
 
     def __init__(self, *args, **kwargs):
         super(BlogForm, self).__init__(*args, **kwargs)
+
+
