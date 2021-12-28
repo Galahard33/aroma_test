@@ -1,12 +1,12 @@
 import os
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from flask_admin.contrib.sqla import ModelView
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_ckeditor import CKEditor, upload_success, upload_fail, CKEditorField
 import random
 
-from models import User, load_user, Blog
+from models import User, Blog, Category
 from forms import LoginForm, RegisterForm, BlogForm
 from models import app, db
 from flask_admin import Admin
@@ -19,12 +19,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 admin = Admin(app, name='blog', template_mode='bootstrap4')
 admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Category, db.session))
 class PostAdmin(ModelView):
     form_overrides = dict(text=CKEditorField)
     create_template = 'edit.html'
     edit_template = 'edit.html'
 
 admin.add_view(PostAdmin(Blog, db.session))
+
 
 @app.route('/files/<path:filename>')
 def uploaded_files(filename):
@@ -44,16 +46,26 @@ def upload():
     return upload_success(url, filename=f.filename)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
     post = Blog.query.all()
-    return render_template('index.html', post=post)
+    category = Category.query.all()
+    return render_template('index.html', post=post, category=category)
 
 
-@app.route('/post/<int:id>')
-def post_detail(id):
-    post=Blog.query.get(id)
-    return render_template('post_detail.html', post=post)
+@app.route('/<slug_cat>/<slug>')
+def post_detail(slug, slug_cat):
+    categoty = Category.query.all()
+    post=Blog.query.filter_by(slug=slug).first()
+    return render_template('post_detail.html', post=post, categoty=categoty)
+
+
+@app.route('/category/<slug_cat>')
+def posts_category(slug_cat):
+    category = Category.query.filter_by(slug=slug_cat).first()
+    print(category)
+    post = Blog.query.filter_by(category_id=category.id)
+    return render_template('cat.html', post=post)
 
 
 @app.route('/post/<int:id>/update', methods=['GET', 'POST'])
@@ -70,12 +82,13 @@ def post_update(id):
             if file1.filename in path:
                 a = random.randrange(1,550,1)
                 path = os.path.join(app.config['UPLOAD_FOLDER'],  str(a) + file1.filename)
-                print(path)
                 file1.save(path)
     if form.validate():
         post.title = form.title.data
         post.text = update_text
+        post.category_id = form.category.data
         if file1.filename:
+            path = path.replace('.', '', 1)
             post.photo = path
         try:
             db.session.commit()
@@ -90,18 +103,24 @@ def post_update(id):
 @login_required
 def upload_file():
     form = BlogForm(request.form)
+    category = Category.query.all()
     if request.method == 'POST':
         file1 = request.files['file1']
         path = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
         file1.save(path)
         if form.validate():
-            new_post = Blog(title=form.title.data,
-                            text=form.text.data,
-                            photo=path)
-            db.session.add(new_post)
-            db.session.commit()
-            flash('add')
-            return redirect(url_for('index'))
+            if current_user.is_authenticated:
+                path = path.replace('.', '', 1)
+                new_post = Blog(title=form.title.data,
+                                text=form.text.data,
+                                slug=form.slug.data,
+                                photo=path,
+                                user_id=current_user.id,
+                                category_id=form.category.data)
+                db.session.add(new_post)
+                db.session.commit()
+                flash('add')
+                return redirect(url_for('index'))
     return render_template('index1.html', form=form)
 
 

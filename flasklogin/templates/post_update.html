@@ -1,8 +1,12 @@
-{% if current_user.is_authenticated %}
 {%  extends '_inc/base.html' %}
 {% block content %}
 <body>
-<h1>ost</h1>
+<div class="album py-5 bg-light">
+<div class="container">
+<div class="row">
+    <div class="col-12">
+    {% if current_user.id == post.user_id %}
+<h1>Post</h1>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -16,6 +20,7 @@
 <form id="BlogForm" class="form form-post" method="POST" action="" role="form" enctype="multipart/form-data">
     {{ render_field(form.title, placeholder="title", value =post.title) }}<br>
     {{ render_field(form.text, placeholder="text") }}<br>
+    {{ render_field(form.category, placeholder="category") }}<br>
          <input type="file" class="btn-danger" name="file1"><br>
     <p><input class="btn btn-outline-primary" type="submit" value="send"></p>
 </form>
@@ -23,5 +28,11 @@
 {{ ckeditor.load() }}
  {{ ckeditor.config(name='text') }}
 </body>
+        {% else %}
+        <h1>У вас нету прав для редактирования данной записи</h1>
+    {% endif %}
+    </div>
+    </div>
+    </div>
+
 {% endblock %}
-{% endif %}

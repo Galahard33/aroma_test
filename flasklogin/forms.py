@@ -1,8 +1,8 @@
-
 from flask_ckeditor import CKEditorField
-from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form, TextField, FileField, TextAreaField
+from wtforms import BooleanField, PasswordField, SubmitField, StringField, Form, TextField, FileField, TextAreaField, \
+    SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
-from wtforms.widgets import TextArea
+from models import Category
 
 
 class LoginForm(Form):
@@ -40,8 +40,11 @@ class BlogForm(Form):
     text = CKEditorField('post',
                       validators=[DataRequired()])
     photo_path = StringField('путь')
+    category = SelectField (u'Choose')
+    slug = StringField('url')
 
     def __init__(self, *args, **kwargs):
         super(BlogForm, self).__init__(*args, **kwargs)
+        self.category.choices = [(obj.id, obj.title) for obj in Category.query.order_by('title')]
 
 

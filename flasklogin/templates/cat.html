@@ -20,27 +20,21 @@
   {% endif %}
 {% endwith %}
 <div class="album py-5 bg-light">
-<div class="container">
-<div class="row">
-    <div class="col-12">
-{% for cat in category %}
-    <a href="{{ url_for('posts_category', slug_cat=cat.slug) }}">{{ cat.title }}</a>
-{% endfor %}
-    </div>
-</div>
-</div>
 <div class="album py-5 bg-light">
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
           {% for item in post %}
         <div class="col">
+
           <div class="card shadow-sm">
+              {{ item.user_id }}
               <img src="{{ item.photo }}" width="400" alt="">
+
             <div class="card-body">
               <p class="card-text">{{ item.title }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <a href="{{ url_for ('post_detail' ,slug_cat=category[item.category.id-1].slug ,slug=item.slug) }}"><button type="button" class="btn btn-sm btn-outline-secondary" >View</button></a>
+                    <a href="{{ url_for ('post_detail' ,slug=item.slug) }}"><button type="button" class="btn btn-sm btn-outline-secondary" >View</button></a>
                   <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                 </div>
                 <small class="text-muted">9 mins</small>
