@@ -55,9 +55,8 @@ def index():
 
 @app.route('/<slug_cat>/<slug>')
 def post_detail(slug, slug_cat):
-    categoty = Category.query.all()
     post=Blog.query.filter_by(slug=slug).first()
-    return render_template('post_detail.html', post=post, categoty=categoty)
+    return render_template('post_detail.html', post=post)
 
 
 @app.route('/category/<slug_cat>')
