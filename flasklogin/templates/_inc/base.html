@@ -23,10 +23,10 @@
         <div class="text-end">
             {% if current_user.is_authenticated %}
                 Hello {{ current_user.login }}
-        <a href="{{ url_for('logout') }}"><button type="button" class="btn btn-outline-light me-2">LogOut</button></a>
+        <a href="{{ url_for('user.logout') }}"><button type="button" class="btn btn-outline-light me-2">LogOut</button></a>
             {% else %}
-            <a href="{{ url_for('login_page') }}"><button type="button" class="btn btn-outline-light me-2">Login</button></a>
-            <a href="{{ url_for('register') }}"><button type="button" class="btn btn-warning">Sign-up</button></a>
+            <a href="{{ url_for('user.login') }}"><button type="button" class="btn btn-outline-light me-2">Login</button></a>
+            <a href="{{ url_for('user.register') }}"><button type="button" class="btn btn-warning">Sign-up</button></a>
             {% endif %}
         </div>
       </div>

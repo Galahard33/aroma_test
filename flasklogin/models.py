@@ -1,4 +1,4 @@
-from flask_login import UserMixin, LoginManager
+from flask_user import UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from slugify import slugify
@@ -14,9 +14,11 @@ db = SQLAlchemy(app)
 
 class User (db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(128), nullable=False,)
-    password = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(250), unique=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default='')
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    confirmed_at = db.Column(db.DateTime())
+    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
     phone = db.Column(db.String(13), unique=True)
     post = db.relationship('Blog', backref='user', lazy=True)
 
