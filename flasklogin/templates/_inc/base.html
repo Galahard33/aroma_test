@@ -22,7 +22,7 @@
 
         <div class="text-end">
             {% if current_user.is_authenticated %}
-                Hello {{ current_user.login }}
+                Hello {{ current_user.username }}
         <a href="{{ url_for('user.logout') }}"><button type="button" class="btn btn-outline-light me-2">LogOut</button></a>
             {% else %}
             <a href="{{ url_for('user.login') }}"><button type="button" class="btn btn-outline-light me-2">Login</button></a>

@@ -88,7 +88,6 @@ def post_detail(slug, slug_cat):
 @app.route('/category/<slug_cat>')
 def posts_category(slug_cat):
     category = Category.query.filter_by(slug=slug_cat).first()
-    print(category)
     post = Blog.query.filter_by(category_id=category.id)
     return render_template('cat.html', post=post)
 

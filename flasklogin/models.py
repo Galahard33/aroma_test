@@ -19,7 +19,7 @@ class User (db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     confirmed_at = db.Column(db.DateTime())
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
-    phone = db.Column(db.String(13), unique=True)
+    phone = db.Column(db.String(13), unique=True, nullable=True)
     post = db.relationship('Blog', backref='user', lazy=True)
 
     def __repr__(self):
