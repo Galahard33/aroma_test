@@ -18,9 +18,6 @@ class Index(CartMixins, View):
     def get(self, request, *args, **kwargs):
         shop = Shop.objects.all().order_by('-views')[:8]
         blog = Blog.objects.all().order_by('-views')[:3]
-        c= Blog.objects.get(id=1)
-        a=c.blog_item.filter(active=True).count
-        print(c, a)
         return render(request, 'shop/index.html', context=({'shop': shop,
                                                             'cart': self.cart,
                                                             'blog': blog,
